@@ -37,7 +37,13 @@ guiders.createGuider({
   next: "fourth",
   position: 2,
   title: "You can also advance guiders from custom event handlers.",
-  width: 450
+  width: 450,
+  onShow: function (guider, next) {
+    doSomeAsyncStuff(function () {
+      doOtherStuff();
+      next();
+    });
+  }
 });
 ~~~~
 
@@ -62,7 +68,7 @@ isHashable: (defaults to true) the guider will be shown auto-shown when a page i
 offset: fine tune the position of the guider, e.g. { left:0, top: -10 }
 onClose: (optional) additional function to call if a guider is closed by the x button, close button, or escape key
 onHide: (optional) additional function to call when the guider is hidden
-onShow: (optional) additional function to call before the guider is shown
+onShow: (optional) additional function to call before the guider is shown. Parameters: function (guider, next), next - callback that should be call at the end
 overlay: (optional) if true, an overlay will pop up between the guider and the rest of the page
 position: (optional / required if using attachTo) clock position at which the guider should be attached to the html element. Can also use a description keyword (such as "topLeft" for 11 or "bottom" for 6)
 shouldSkip: (optional) if this function evaluates to true, the guider will be skipped
