@@ -371,11 +371,11 @@ var guiders = (function($) {
   guiders._updatePositionOnResize();
 
   guiders._unwireEscape = function (myGuider) {
-    $(document).unbind("keydown");
+    $(document).unbind("keydown.guiders");
   };
 
   guiders._wireEscape = function (myGuider) {
-    $(document).keydown(function(event) {
+    $(document).bind("keydown.guiders", function(event) {
       if (event.keyCode == 27 || event.which == 27) {
         guiders.hideAll();
         if (myGuider.onClose) {
