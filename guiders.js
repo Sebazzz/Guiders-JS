@@ -24,7 +24,7 @@ var guiders = (function ($) {
         attachTo: null, // Selector of the element to attach to.
         autoFocus: false, // Determines whether or not the browser scrolls to the element.
         autoFocusAttachTo: true, // scroll to attached to element
-        buttons: [{ name: "Close" }],
+        buttons: [{ name: "Close", purpose: "close" }],
         buttonCustomHTML: "",
         classString: null,
         closeOnEscape: false,
@@ -116,11 +116,12 @@ var guiders = (function ($) {
 
             guiderButtonsContainer.append(thisButtonElem);
 
-            var thisButtonName = thisButton.name.toLowerCase();
+            var thisButtonName = (thisButton.purpose || thisButton.name).toLowerCase();
             if (thisButton.onclick) {
                 thisButtonElem.bind(guiders._buttonClickEvent, thisButton.onclick);
             } else {
                 switch (thisButtonName) {
+					case "close":
                     case guiders._closeButtonTitle.toLowerCase():
                         thisButtonElem.addClass('guiders_btn').addClass('guiders_btn_close');
                         thisButtonElem.bind(guiders._buttonClickEvent, function () {
@@ -131,12 +132,14 @@ var guiders = (function ($) {
                             $("body").trigger("guidersClose");
                         });
                         break;
+					case "next":
                     case guiders._nextButtonTitle.toLowerCase():
                         thisButtonElem.addClass('guiders_btn').addClass('guiders_btn_next');
                         thisButtonElem.bind(guiders._buttonClickEvent, function () {
                             !myGuider.elem.data("locked") && guiders.next();
                         });
                         break;
+					case "previous":
                     case guiders._backButtonTitle.toLowerCase():
                         thisButtonElem.addClass('guiders_btn').addClass('guiders_btn_prev');
                         thisButtonElem.bind(guiders._buttonClickEvent, function () {
