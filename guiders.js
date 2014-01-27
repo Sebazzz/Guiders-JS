@@ -39,6 +39,7 @@ var guiders = (function ($) {
         onClose: null,
         onHide: null,
         onShow: null,
+		onBeforeShow: null,
         overlay: false,
         position: 0, // 1-12 follows an analog clock, 0 means centered.
         scrollTimeout: 100,
@@ -627,6 +628,15 @@ var guiders = (function ($) {
         }
 
         var myGuider = guiders.get(id);
+		
+		if (myGuider.onBeforeShow && typeof myGuider.onBeforeShow == 'function') {
+			var shouldShow = !(myGuider.onBeforeShow(myGuider) === false);
+			
+			if (!shouldShow) {
+				return;
+			}
+		}
+		
         if (myGuider.overlay) {
             guiders._showOverlay(myGuider);
             // if guider is attached to an element, make sure it's visible
@@ -669,10 +679,6 @@ var guiders = (function ($) {
 
             var isGuiderBelow = (scrollHeight + windowHeight < guiderOffset.top + guiderElemHeight); /* we will need to scroll down */
             var isGuiderAbove = (guiderOffset.top < scrollHeight); /* we will need to scroll up */
-
-            if (myGuider.autoFocus && (isGuiderBelow || isGuiderAbove)) {
-
-            }
 
             var hasScrolled = false;
             if (myGuider.attachTo && myGuider.autoFocusAttachTo && !isElementInViewport($(myGuider.attachTo).get(0))) {
