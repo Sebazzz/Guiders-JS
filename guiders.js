@@ -666,6 +666,13 @@ var guiders = (function ($) {
 
         function next() {
             nextCalled = true;
+			
+			// if we do not have a 'next' guider, hide the next button
+			if (myGuider.next) {
+				myGuider.elem.find('guiders_btn_next').hide();
+			} else {
+				myGuider.elem.find('guiders_btn_next').show();
+			}
 
             guiders._attach(myGuider);
             myGuider.elem.fadeIn("fast").data("locked", false);
