@@ -129,6 +129,7 @@ var guiders = (function ($) {
                             guiders.hideAll();
                             if (myGuider.onClose) {
                                 myGuider.onClose(myGuider, false /* close by button */);
+								guiders._currentGuiderID = null;
                             }
                             $("body").trigger("guidersClose");
                         });
