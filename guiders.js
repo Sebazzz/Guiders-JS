@@ -56,8 +56,10 @@ var guiders = (function ($) {
 		_onBeforeShow: [],
 		_onClose: [],
 		_onHide: [],
-		_callHook: function(name, guider, thisArg, args) {
+		_callHook: function(name, guider, thisArg, extraArgs) {
 			var fns=this["_" + name ];
+			var args = [guider].concat(extraArgs || []);
+			
 			for (var i=0;i<fns.length;i++) {
 				var fn = fns[i];
 				if (fn) { fn.apply(thisArg, args); }
