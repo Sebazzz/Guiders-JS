@@ -173,7 +173,7 @@ var guiders = (function ($) {
                         thisButtonElem.bind(guiders._buttonClickEvent, function () {
                             guiders.hideAll();
 							
-							globalHooks._callHook('onClose', myGuider, myGuider, false /* close by button */);
+							guiders.globalHooks._callHook('onClose', myGuider, myGuider, false /* close by button */);
 							guiders._currentGuiderID = null;
 
                             $("body").trigger("guidersClose");
@@ -545,7 +545,7 @@ var guiders = (function ($) {
 
         $(".guider:visible").each(function (index, elem) {
             var myGuider = guiders.get($(elem).attr('id'));
-			globalHooks._callHook('onHide', myGuider, myGuider, next);
+			guiders.globalHooks._callHook('onHide', myGuider, myGuider, next);
         });
 		
         $(".guider").fadeOut("fast");
@@ -672,7 +672,7 @@ var guiders = (function ($) {
 
         var myGuider = guiders.get(id);
 		
-		var shouldShow = !(globalHooks._callHook('onBeforeShow', myGuider, myGuider) === false);
+		var shouldShow = !(guiders.globalHooks._callHook('onBeforeShow', myGuider, myGuider) === false);
 		if (!shouldShow) {
 			return;
 		}
@@ -695,7 +695,7 @@ var guiders = (function ($) {
 
         // You can use an onShow function to take some action before the guider is shown.
         var nextCalled = false;
-        var shouldCallNext = !(globalHooks._callHook('onShow', myGuider, myGuider, next) === false);
+        var shouldCallNext = !(guiders.globalHooks._callHook('onShow', myGuider, myGuider, next) === false);
 
         if (!nextCalled && shouldCallNext === true) {
             next();
