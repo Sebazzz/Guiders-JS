@@ -460,12 +460,6 @@ var guiders = (function ($) {
 
         guiderElement.find(".guiders_description").html(myGuider.description);
 
-        guiders._addButtons(myGuider);
-
-        if (myGuider.xButton) {
-            guiders._addXButton(myGuider);
-        }
-
         guiderElement.hide();
         guiderElement.appendTo("body");
         guiderElement.attr("id", myGuider.id);
@@ -674,6 +668,14 @@ var guiders = (function ($) {
 
         function next() {
             nextCalled = true;
+			
+			// add guider butons here (allows for post-creation button configuration)
+			guiders._addButtons(myGuider);
+
+			if (myGuider.xButton) {
+				guiders._addXButton(myGuider);
+			}
+
 			
 			// if we do not have a 'next' guider, hide the next button
 			if (myGuider.next) {
