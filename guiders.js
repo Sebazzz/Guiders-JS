@@ -49,6 +49,13 @@ var guiders = (function ($) {
         width: 400,
         xButton: false // This places a closer "x" button in the top right of the guider.
     };
+	
+	guiders.globalHooks = {
+		onShow: null,
+		onBeforeShow: null,
+		onClose: null,
+		onHide: null
+	};
 
     guiders._htmlSkeleton = [
       "<div class='guider'>",
@@ -670,9 +677,9 @@ var guiders = (function ($) {
 			
 			// if we do not have a 'next' guider, hide the next button
 			if (myGuider.next) {
-				myGuider.elem.find('guiders_btn_next').hide();
-			} else {
 				myGuider.elem.find('guiders_btn_next').show();
+			} else {
+				myGuider.elem.find('guiders_btn_next').hide();
 			}
 
             guiders._attach(myGuider);
