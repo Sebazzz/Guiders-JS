@@ -108,9 +108,19 @@ var guiders = (function ($) {
         var guiderButtonsContainer = myGuider.elem.find(".guiders_buttons_container");
 
         if (myGuider.buttons === null || myGuider.buttons.length === 0) {
-            guiderButtonsContainer.remove();
+            guiderButtonsContainer.hide();
             return;
         }
+		
+		guiderButtonsContainer.show();
+		
+		if (myGuider.buttonCustomHTML !== "") {
+			// we are not instantiated via jquery $().guider so just clear the html
+			guiderButtonsContainer.html('');
+		} else {
+			// clear existing buttons first
+			guiderButtonsContainer.find('.guiders_btn').remove();
+		}
 
         for (var i = myGuider.buttons.length - 1; i >= 0; i--) {
             var thisButton = myGuider.buttons[i];
@@ -122,7 +132,7 @@ var guiders = (function ($) {
                 thisButtonElem.addClass(thisButton.classString);
             }
 
-            guiderButtonsContainer.append(thisButtonElem);
+            guiderButtonsContainer.prepend(thisButtonElem);
 
             var thisButtonName = (thisButton.purpose || thisButton.name).toLowerCase();
             if (thisButton.onclick) {
@@ -165,7 +175,7 @@ var guiders = (function ($) {
         }
 
         if (myGuider.buttons.length === 0) {
-            guiderButtonsContainer.remove();
+            guiderButtonsContainer.hide();
         } else {
             myGuider.elem.on('focus', '.guiders_btn', function (e) {
                 this.blur();
