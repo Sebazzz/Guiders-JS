@@ -24,7 +24,7 @@ var guiders = (function ($) {
         attachTo: null, // Selector of the element to attach to.
         autoFocus: false, // Determines whether or not the browser scrolls to the element.
         autoFocusAttachTo: true, // scroll to attached to element
-        buttons: [{ name: "Close", purpose: "close" }],
+        buttons: [{ name: "Close", purpose: "close", show: true }],
         buttonCustomHTML: "",
         classString: null,
         closeOnEscape: false,
@@ -52,10 +52,30 @@ var guiders = (function ($) {
     };
 	
 	guiders.globalHooks = {
-		onShow: null,
-		onBeforeShow: null,
-		onClose: null,
-		onHide: null
+		_onShow: [],
+		_onBeforeShow: [],
+		_onClose: [],
+		_onHide: [],
+		_callHook: function(name, guider, thisArg, args) {
+			var fns=this["_" + name ];
+			for (var i=0;i<fns.length;i++) {
+				var fn = fns[i];
+				if (fn) { fn.apply(thisArg, args); }
+			}
+			
+			if (guider[name]) { return guider[name].apply(thisArg, args); }
+		},
+		
+		addHook: function(name, fn) {
+			var fns=this["_" + name ];
+			fns.push(fn);
+		},
+		
+		removeHook: function(name, fn) {
+			var fns=this["_" + name ];
+			var idx = fns.indexOf(fn);
+			if (idx >= 0) { fns[idx] = null; }
+		}
 	};
 
     guiders._htmlSkeleton = [
@@ -152,13 +172,14 @@ var guiders = (function ($) {
                         thisButtonElem.addClass('guiders_btn').addClass('guiders_btn_close');
                         thisButtonElem.bind(guiders._buttonClickEvent, function () {
                             guiders.hideAll();
-                            if (myGuider.onClose) {
-                                myGuider.onClose(myGuider, false /* close by button */);
-								guiders._currentGuiderID = null;
-                            }
+							
+							globalHooks._callHook('onClose', myGuider, myGuider, false /* close by button */);
+							guiders._currentGuiderID = null;
+
                             $("body").trigger("guidersClose");
                         });
                         break;
+						
 					case "next":
                     case guiders._nextButtonTitle.toLowerCase():
                         thisButtonElem.addClass('guiders_btn').addClass('guiders_btn_next');
@@ -166,6 +187,7 @@ var guiders = (function ($) {
                             !myGuider.elem.data("locked") && guiders.next();
                         });
                         break;
+						
 					case "previous":
                     case guiders._backButtonTitle.toLowerCase():
                         thisButtonElem.addClass('guiders_btn').addClass('guiders_btn_prev');
@@ -523,10 +545,9 @@ var guiders = (function ($) {
 
         $(".guider:visible").each(function (index, elem) {
             var myGuider = guiders.get($(elem).attr('id'));
-            if (myGuider.onHide) {
-                myGuider.onHide(myGuider, next);
-            }
+			globalHooks._callHook('onHide', myGuider, myGuider, next);
         });
+		
         $(".guider").fadeOut("fast");
         var currentGuider = guiders._guiders[guiders._currentGuiderID];
         if (currentGuider && currentGuider.highlight) {
@@ -537,6 +558,8 @@ var guiders = (function ($) {
         } else {
             guiders._hideOverlay();
         }
+		
+		
         return guiders;
     };
 
@@ -649,12 +672,9 @@ var guiders = (function ($) {
 
         var myGuider = guiders.get(id);
 		
-		if (myGuider.onBeforeShow && typeof myGuider.onBeforeShow == 'function') {
-			var shouldShow = !(myGuider.onBeforeShow(myGuider) === false);
-			
-			if (!shouldShow) {
-				return;
-			}
+		var shouldShow = !(globalHooks._callHook('onBeforeShow', myGuider, myGuider) === false);
+		if (!shouldShow) {
+			return;
 		}
 		
         if (myGuider.overlay) {
@@ -675,10 +695,7 @@ var guiders = (function ($) {
 
         // You can use an onShow function to take some action before the guider is shown.
         var nextCalled = false;
-        var shouldCallNext = true;
-        if (myGuider.onShow) {
-            shouldCallNext = !(myGuider.onShow(myGuider, next) === false);
-        }
+        var shouldCallNext = !(globalHooks._callHook('onShow', myGuider, myGuider, next) === false);
 
         if (!nextCalled && shouldCallNext === true) {
             next();
