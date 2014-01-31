@@ -140,7 +140,7 @@ var guiders = (function ($) {
 			guiderButtonsContainer.html('');
 		} else {
 			// clear existing buttons first
-			guiderButtonsContainer.find('.guiders_btn').remove();
+			guiderButtonsContainer.find('*').remove();
 		}
 
         for (var i = myGuider.buttons.length - 1; i >= 0; i--) {
