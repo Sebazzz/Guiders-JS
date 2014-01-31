@@ -715,9 +715,9 @@ var guiders = (function ($) {
 			
 			// if we do not have a 'next' guider, hide the next button
 			if (myGuider.next) {
-				myGuider.elem.find('guiders_btn_next').show();
+				myGuider.elem.find('.guiders_btn_next').show();
 			} else {
-				myGuider.elem.find('guiders_btn_next').hide();
+				myGuider.elem.find('.guiders_btn_next').hide();
 			}
 
             guiders._attach(myGuider);
