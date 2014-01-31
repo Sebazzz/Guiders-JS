@@ -42,6 +42,7 @@ var guiders = (function ($) {
 		onBeforeShow: null,
         overlay: false,
         position: 0, // 1-12 follows an analog clock, 0 means centered.
+		reinitializeButtons: function() { guiders._addButtons(this); return this;},
         scrollTimeout: 100,
         scrollSpeed: 1500,
         shouldSkip: function () { }, // Optional handler allows you to skip a guider if returns true.
@@ -127,6 +128,13 @@ var guiders = (function ($) {
             var thisButtonElem = $(guiders._buttonElement,
               $.extend({ "class": guiders._buttonClassName, "html": thisButton.name }, guiders._buttonAttributes, thisButton.html || {})
             );
+			var showButton = thisButton.show !== false;
+			
+			if (!showButton) {
+				thisButtonElem.hide();
+			} else {
+				thisButtonElem.show();
+			}
 
             if (typeof thisButton.classString !== "undefined" && thisButton.classString !== null) {
                 thisButtonElem.addClass(thisButton.classString);
@@ -685,7 +693,6 @@ var guiders = (function ($) {
 			if (myGuider.xButton) {
 				guiders._addXButton(myGuider);
 			}
-
 			
 			// if we do not have a 'next' guider, hide the next button
 			if (myGuider.next) {
